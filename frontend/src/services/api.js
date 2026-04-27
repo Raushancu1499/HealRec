@@ -96,6 +96,30 @@ export const emergencyAPI = {
       triggerAlert: (data) => apiRequest('/emergency/alert', { method: 'POST', body: data })
 };
 
+
+export const familyAPI = {
+        getMembers: () => apiRequest('/family/members'),
+        addMember: (data) => apiRequest('/family/members', { method: 'POST', body: data }),
+        updateMember: (id, data) => apiRequest(`/family/members/${id}`, { method: 'PUT', body: data }),
+        deleteMember: (id) => apiRequest(`/family/members/${id}`, { method: 'DELETE' })
+};
+
+export const labAPI = {
+        getTests: () => apiRequest('/lab/tests'),
+        bookTest: (data) => apiRequest('/lab/book', { method: 'POST', body: data }),
+        getResults: () => apiRequest('/lab/results')
+};
+
+export const apiUtils = {
+        formatDate: (date) => new Date(date).toLocaleDateString(),
+        formatCurrency: (amount) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount)
+};
+
+// Singular aliases for backward compatibility and to fix build errors
+export const medicationAPI = medicationsAPI;
+export const appointmentAPI = appointmentsAPI;
+export const reportAPI = reportsAPI;
+
 export const familyAPI = {
       getMembers: () => apiRequest('/family/members'),
       addMember: (data) => apiRequest('/family/members', { method: 'POST', body: data }),
