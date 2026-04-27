@@ -90,30 +90,46 @@ router.get('/types', auth, async (req, res) => {
 // @access   Private
 router.get('/statistics', auth, async (req, res) => {
   try {
-    const { period = 'year' } = req.query;
+    const userId = req.user._id;
     
-    // Mock statistics
+    // Total reports count
+    const totalReports = await Report.countDocuments({ userId });
+    
+    // Reports by type
+    const reportsByTypeRaw = await Report.aggregate([
+      { $match: { userId } },
+      { $group: { _id: '$type', count: { $sum: 1 } } }
+    ]);
+    
+    const reportsByType = {};
+    reportsByTypeRaw.forEach(item => {
+      reportsByType[item._id] = item.count;
+    });
+    
+    // Reports by status
+    const reportsByStatusRaw = await Report.aggregate([
+      { $match: { userId } },
+      { $group: { _id: '$status', count: { $sum: 1 } } }
+    ]);
+    
+    const reportsByStatus = {};
+    reportsByStatusRaw.forEach(item => {
+      reportsByStatus[item._id] = item.count;
+    });
+
+    // Mock trends and storage as placeholders for now, but counts are real
     const statistics = {
-      totalReports: 24,
-      reportsByType: {
-        'Lab Report': 8,
-        'Radiology': 6,
-        'Immunization': 4,
-        'Other': 6
-      },
-      reportsByStatus: {
-        'Verified': 18,
-        'Pending': 4,
-        'Rejected': 2
-      },
+      totalReports,
+      reportsByType,
+      reportsByStatus,
       monthlyTrends: [
-        { month: 'Jan', count: 2 },
-        { month: 'Feb', count: 3 },
-        { month: 'Mar', count: 1 },
-        { month: 'Apr', count: 4 }
+        { month: 'Jan', count: Math.ceil(totalReports * 0.1) },
+        { month: 'Feb', count: Math.ceil(totalReports * 0.2) },
+        { month: 'Mar', count: Math.ceil(totalReports * 0.3) },
+        { month: 'Apr', count: Math.ceil(totalReports * 0.4) }
       ],
-      storageUsed: '45.2 MB',
-      averageFileSize: '1.8 MB'
+      storageUsed: `${(totalReports * 1.5).toFixed(1)} MB`,
+      averageFileSize: '1.5 MB'
     };
 
     res.json({

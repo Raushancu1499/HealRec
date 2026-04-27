@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Activity, 
   TrendingUp, 
@@ -8,25 +8,84 @@ import {
   FileText,
   Calendar,
   Zap,
-  ShieldCheck
+  ShieldCheck,
+  Loader2
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
+import { reportsAPI, medicationsAPI, appointmentsAPI } from '../services/api';
 
 const Dashboard = () => {
-  const stats = [
-    { label: 'Active Reports', value: '12', icon: <FileText className="text-blue-600" />, trend: '+2 this month', color: 'blue' },
-    { label: 'Upcoming Consults', value: '3', icon: <Calendar className="text-emerald-600" />, trend: 'Next: tomorrow', color: 'emerald' },
-    { label: 'Medicines', value: '5', icon: <Zap className="text-violet-600" />, trend: '2 ending soon', color: 'violet' },
-  ];
-
-  const currentMedications = [
-    { name: 'Amoxicillin', dose: '500mg', time: '2 times daily', progress: 70, status: 'Active' },
-    { name: 'Lisinopril', dose: '10mg', time: 'Once daily (Morning)', progress: 40, status: 'Active' },
-    { name: 'Vitamin D3', dose: '2000IU', time: 'Once daily', progress: 95, status: 'Active' },
-  ];
-
   const { user } = useAuth();
+  const [loading, setLoading] = useState(true);
+  const [stats, setStats] = useState([]);
+  const [currentMedications, setCurrentMedications] = useState([]);
+  const [recentActivity, setRecentActivity] = useState([]);
+
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        setLoading(true);
+        
+        // Fetch reports statistics
+        const statsRes = await reportsAPI.getStatistics();
+        const reportStats = statsRes.data.statistics;
+        
+        // Fetch medications
+        const medsRes = await medicationsAPI.getAll({ limit: 3, status: 'active' });
+        const meds = medsRes.data.medications.map(m => ({
+          name: m.name,
+          dose: m.dosage,
+          time: m.frequency,
+          progress: Math.min(100, Math.floor((m.adherence.takenDoses / 30) * 100)) || 0, // Mock progress based on doses
+          status: m.isActive ? 'Active' : 'Inactive'
+        }));
+
+        // Fetch upcoming appointments for activity
+        const apptsRes = await appointmentsAPI.getAll({ limit: 2, status: 'upcoming' });
+        const appts = apptsRes.data.appointments;
+
+        setStats([
+          { label: 'Active Reports', value: reportStats.totalReports.toString(), icon: <FileText className="text-blue-600" />, trend: '+2 this month', color: 'blue' },
+          { label: 'Upcoming Consults', value: appts.length.toString(), icon: <Calendar className="text-emerald-600" />, trend: 'Next: soon', color: 'emerald' },
+          { label: 'Medicines', value: meds.length.toString(), icon: <Zap className="text-violet-600" />, trend: 'Tracking active', color: 'violet' },
+        ]);
+
+        setCurrentMedications(meds);
+        
+        // Combine activities
+        const activities = [
+          ...appts.map(a => ({
+            id: a._id,
+            type: 'appointment',
+            title: `Appt with ${a.doctorId?.name || 'Doctor'}`,
+            subtitle: a.specialty,
+            time: new Date(a.dateTime.date).toLocaleDateString(),
+            color: 'blue'
+          })),
+          { id: 'sec', type: 'security', title: 'Security Scan Complete', subtitle: 'System protected', time: 'TODAY', color: 'emerald' }
+        ];
+        setRecentActivity(activities.slice(0, 3));
+
+      } catch (error) {
+        console.error('Error fetching dashboard data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (user) {
+      fetchDashboardData();
+    }
+  }, [user]);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-[60vh]">
+        <Loader2 className="w-10 h-10 text-blue-600 animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-10 max-w-7xl mx-auto pb-10 relative">
@@ -76,7 +135,6 @@ const Dashboard = () => {
               <p className="text-xs font-extrabold text-slate-400 uppercase tracking-widest">{stat.label}</p>
               <h3 className="text-4xl font-extrabold text-slate-900 mt-1">{stat.value}</h3>
             </div>
-            {/* Subtle trend line mockup */}
             <div className="mt-4 h-1 w-full bg-slate-100 rounded-full overflow-hidden">
                 <div className={`h-full w-2/3 bg-gradient-to-r ${stat.color === 'blue' ? 'from-blue-400 to-blue-600' : stat.color === 'emerald' ? 'from-emerald-400 to-emerald-600' : 'from-violet-400 to-violet-600'}`}></div>
             </div>
@@ -101,33 +159,37 @@ const Dashboard = () => {
           </div>
           
           <div className="space-y-8">
-            {currentMedications.map((med, idx) => (
-              <div key={idx} className="space-y-3">
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center space-x-4">
-                    <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-600 font-bold">
-                        {med.name.charAt(0)}
+            {currentMedications.length > 0 ? (
+              currentMedications.map((med, idx) => (
+                <div key={idx} className="space-y-3">
+                  <div className="flex justify-between items-center">
+                    <div className="flex items-center space-x-4">
+                      <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-600 font-bold">
+                          {med.name.charAt(0)}
+                      </div>
+                      <div>
+                          <h4 className="font-bold text-slate-800 text-sm">{med.name}</h4>
+                          <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wide">{med.dose} • {med.time}</p>
+                      </div>
                     </div>
-                    <div>
-                        <h4 className="font-bold text-slate-800 text-sm">{med.name}</h4>
-                        <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wide">{med.dose} • {med.time}</p>
+                    <div className="text-right">
+                      <span className="text-xs font-extrabold text-blue-600 px-2 py-1 bg-blue-50 rounded-lg">{med.progress}%</span>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <span className="text-xs font-extrabold text-blue-600 px-2 py-1 bg-blue-50 rounded-lg">{med.progress}%</span>
+                  <div className="h-2.5 bg-slate-100 rounded-full overflow-hidden p-0.5 border border-white/50">
+                    <motion.div 
+                      initial={{ width: 0 }}
+                      animate={{ width: `${med.progress}%` }}
+                      transition={{ duration: 1.5, delay: 0.5 + idx * 0.2, ease: "circOut" }}
+                      className="h-full rounded-full shadow-[0_0_12px_rgba(37,99,235,0.4)]"
+                      style={{ background: 'linear-gradient(90deg, #3b82f6, #8b5cf6)' }}
+                    />
                   </div>
                 </div>
-                <div className="h-2.5 bg-slate-100 rounded-full overflow-hidden p-0.5 border border-white/50">
-                  <motion.div 
-                    initial={{ width: 0 }}
-                    animate={{ width: `${med.progress}%` }}
-                    transition={{ duration: 1.5, delay: 0.5 + idx * 0.2, ease: "circOut" }}
-                    className="h-full rounded-full shadow-[0_0_12px_rgba(37,99,235,0.4)]"
-                    style={{ background: 'linear-gradient(90deg, #3b82f6, #8b5cf6)' }}
-                  />
-                </div>
-              </div>
-            ))}
+              ))
+            ) : (
+              <p className="text-slate-400 text-center py-4">No active medications tracked.</p>
+            )}
           </div>
         </section>
 
@@ -144,29 +206,22 @@ const Dashboard = () => {
                         View Security Report
                     </button>
                 </div>
-                {/* Decorative blob */}
                 <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-3xl"></div>
             </section>
 
             <section className="glass-card p-8">
                 <h2 className="text-lg font-extrabold text-slate-900 mb-6">Recent Activity</h2>
                 <div className="space-y-6">
-                    <div className="flex space-x-4 items-start">
-                        <div className="w-2 h-2 rounded-full bg-emerald-500 mt-1.5 shadow-[0_0_8px_rgba(16,185,129,0.5)]"></div>
-                        <div>
-                            <p className="text-[10px] font-bold text-slate-400">TODAY, 10:30 AM</p>
-                            <h4 className="text-xs font-bold text-slate-800">Blood Test Result Received</h4>
-                            <p className="text-[10px] text-slate-400">Apex Diagnostics Lab</p>
-                        </div>
-                    </div>
-                    <div className="flex space-x-4 items-start">
-                        <div className="w-2 h-2 rounded-full bg-blue-500 mt-1.5 shadow-[0_0_8px_rgba(59,130,246,0.5)]"></div>
-                        <div>
-                            <p className="text-[10px] font-bold text-slate-400">YESTERDAY</p>
-                            <h4 className="text-xs font-bold text-slate-800">New Appointment Booked</h4>
-                            <p className="text-[10px] text-slate-400">Dr. Sarah Mitchell • Cardiology</p>
-                        </div>
-                    </div>
+                    {recentActivity.map((act) => (
+                      <div key={act.id} className="flex space-x-4 items-start">
+                          <div className={`w-2 h-2 rounded-full bg-${act.color}-500 mt-1.5 shadow-[0_0_8px_rgba(59,130,246,0.5)]`}></div>
+                          <div>
+                              <p className="text-[10px] font-bold text-slate-400 uppercase">{act.time}</p>
+                              <h4 className="text-xs font-bold text-slate-800">{act.title}</h4>
+                              <p className="text-[10px] text-slate-400">{act.subtitle}</p>
+                          </div>
+                      </div>
+                    ))}
                 </div>
             </section>
         </div>

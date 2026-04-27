@@ -19,6 +19,7 @@ import Messages from './pages/Messages';
 import Landing from './pages/Landing';
 import Login from './pages/Auth/Login';
 import Signup from './pages/Auth/Signup';
+import UserManagement from './pages/Admin/UserManagement';
 
 // Protected Route Component
 const ProtectedRoute = ({ children, roles }) => {
@@ -75,8 +76,8 @@ function AppRoutes() {
       {/* Lab + Admin routes */}
       <Route path="/lab-portal" element={<ProtectedRoute roles={['Lab', 'Admin']}><LabPortal /></ProtectedRoute>} />
 
-      {/* Admin-only: redirect to lab-portal as placeholder for user management */}
-      <Route path="/users" element={<ProtectedRoute roles={['Admin']}><LabPortal /></ProtectedRoute>} />
+      {/* Admin-only: dedicated user management */}
+      <Route path="/users" element={<ProtectedRoute roles={['Admin']}><UserManagement /></ProtectedRoute>} />
 
       {/* Catch-all */}
       <Route path="*" element={<Navigate to={user ? "/dashboard" : "/"} />} />
