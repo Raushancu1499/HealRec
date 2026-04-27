@@ -1,0 +1,181 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary: #2563eb;
+  --primary-glow: rgba(37, 99, 235, 0.4);
+  --secondary: #10b981;
+  --secondary-glow: rgba(16, 185, 129, 0.4);
+  --accent: #8b5cf6;
+  --background: #fdfdfd;
+  --foreground: #0f172a;
+  
+  /* Sidebar */
+  --sidebar-bg: #0f172a;
+  --sidebar-fg: #f1f5f9;
+  --sidebar-active: #2563eb;
+  
+  /* Glassmorphism 2.0 */
+  --glass-bg: rgba(255, 255, 255, 0.65);
+  --glass-border: rgba(255, 255, 255, 0.4);
+  --glass-inner-glow: inset 0 1px 1px rgba(255, 255, 255, 0.5);
+  --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.08);
+  
+  --radius: 12px;
+  --radius-xl: 20px;
+  
+  /* Semantic text colors */
+  --muted: #64748b;
+  --foreground: #0f172a;
+  --primary-text: #2563eb;
+}
+
+/* CSS utility classes for semantic colors used throughout JSX */
+.text-muted { color: var(--muted); }
+.text-foreground { color: var(--foreground); }
+.text-primary { color: var(--primary); }
+.text-secondary { color: var(--secondary); }
+.text-accent { color: var(--accent); }
+
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background-color: var(--background);
+  color: var(--foreground);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Premium Mesh Gradient Background */
+.mesh-gradient {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  background-color: #fdfdfd;
+  background-image: 
+    radial-gradient(at 100% 0%, rgba(37, 99, 235, 0.08) 0, transparent 50%),
+    radial-gradient(at 0% 100%, rgba(16, 185, 129, 0.08) 0, transparent 50%),
+    radial-gradient(at 80% 50%, rgba(139, 92, 246, 0.05) 0, transparent 50%),
+    radial-gradient(at 20% 40%, rgba(37, 99, 235, 0.05) 0, transparent 50%);
+  filter: blur(80px);
+  animation: mesh-move 20s infinite alternate ease-in-out;
+}
+
+@keyframes mesh-move {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.1); }
+}
+
+/* Advanced Glassmorphism */
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  border-radius: var(--radius-xl);
+}
+
+.glass-card {
+  position: relative;
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+  box-shadow: var(--glass-inner-glow);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.65);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.06);
+  border-color: var(--primary-glow);
+}
+
+/* Layout & Typography */
+h1, h2, h3 {
+  letter-spacing: -0.025em;
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Premium Buttons */
+.btn-premium {
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  color: white;
+  padding: 0.8rem 1.6rem;
+  border-radius: 14px;
+  font-weight: 700;
+  border: none;
+  box-shadow: 0 8px 16px -4px var(--primary-glow);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-premium::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: 0.5s;
+}
+
+.btn-premium:hover {
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 0 12px 24px -6px var(--primary-glow);
+}
+
+.btn-premium:hover::after {
+  left: 100%;
+}
+
+/* Sidebar Specifics */
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+  color: #94a3b8;
+}
+
+.sidebar-link:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+}
+
+.sidebar-link.active {
+  background: var(--primary);
+  color: white;
+  box-shadow: 0 0 20px var(--primary-glow);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: #cbd5e1; }

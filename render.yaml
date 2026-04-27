@@ -1,0 +1,28 @@
+# Render.com deployment configuration for HealRec backend
+# See: https://render.com/docs/render-yaml-spec
+
+services:
+  - type: web
+    name: healrec-backend
+    env: node
+    region: oregon
+    plan: free
+    rootDir: backend
+    buildCommand: npm ci --only=production
+    startCommand: node server.js
+    healthCheckPath: /api/status
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: MONGODB_URI
+        sync: false  # Set this in Render dashboard (MongoDB Atlas URI)
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRE
+        value: 7d
+      - key: BCRYPT_SALT_ROUNDS
+        value: 12
+      - key: FRONTEND_URL
+        sync: false  # Set this to your Vercel frontend URL

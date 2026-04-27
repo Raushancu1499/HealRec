@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Grid Gallery</title>
+    <link rel="stylesheet" href="med.css">
+    <style>
+        /* Basic styling for the grid */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* 3 images per row */
+            grid-gap: 10px; /* Adjust the gap between images */
+        }
+
+        /* Style for the images */
+        .grid__figure {
+            position: relative;
+        }
+
+        .grid__img {
+            width: 100%;
+            height: auto; /* Maintain aspect ratio */
+            object-fit: cover; /* Fill the grid cell while preserving aspect ratio */
+        }
+
+        .grid__figure figcaption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            background: rgba(0, 0, 0, 0.7);
+            color: #fff;
+            padding: 5px;
+            width: 100%;
+            text-align: center;
+        }
+
+        /* Add styles for the button */
+        .button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .button:hover {
+            background: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Add the button to the upper right corner -->
+    <button class="button" onclick="window.location.href = 'i2.html'">Back!</button>
+    <ul class="grid">
+        <li>
+            <figure class="grid__figure">
+                <img src="https://cdn.venngage.com/template/thumbnail/full/aa9eda1b-09c1-4297-a18a-8a6694962e32.webp" alt="Image 1" class="grid__img">
+                <figcaption>Birth report</figcaption>
+            </figure>
+        </li>
+        <li>
+            <figure class="grid__figure">
+                <img src="D:\Screenshot-2023-04-03-at-1.01.30-PM.png" alt="Image 2" class="grid__img">
+                <figcaption>Blood report</figcaption>
+            </figure>
+        </li>
+        <li>
+            <figure class="grid__figure">
+                <img src="https://images.sampletemplates.com/wp-content/uploads/2017/03/03222311/Medical-Legal-Report-Example.jpg" alt="Image 3" class="grid__img">
+                <figcaption>Treatment report</figcaption>
+            </figure>
+        </li>
+        
+        <li>
+            <figure class="grid__figure">
+                <img src="https://images.template.net/wp-content/uploads/2017/06/Employee-Medical-Report1.jpg" alt="Image 4" class="grid__img">
+                <figcaption>Job Medical report</figcaption>
+            </figure>
+        </li>
+        
+       
+        <!-- Add more image items here -->
+        <!-- Repeat the same structure for other images -->
+    </ul>
+</body>
+</html>

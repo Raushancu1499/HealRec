@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealRec</title>
+    <link rel="stylesheet" href="patient.css">
+</head>
+<body>
+    <div class="container">
+        <div class="screen">
+            <div class="screen__content">
+                <form class="login">
+                    <div class="login__field">
+                        <label for="appointment-time">Patient Id:</label>
+                        <i class="login__icon fas fa-user"></i>
+                        <input type="text" class="login__input" placeholder="User name / Email of Client">
+                    </div>
+                    <div class="login__field">
+                        <label for="appointment-time">Admit Date:</label>
+                        <i class="login__icon fas fa-calendar"></i>
+                        <input type="date" class="login__input" placeholder="Date of Birth">
+                    </div>
+                    <div class="login__field">
+                        <label for="appointment-time">Admit Time:</label>
+                        <i class="login__icon fas fa-clock"></i>
+                        <input type="time" class="login__input" placeholder="Preferred Appointment Time">
+                    </div>
+                    
+                    <div class="login__field">
+                        <label for="appointment-time">Discharge Date:</label>
+                        <i class="login__icon fas fa-calendar"></i>
+                        <input type="date" class="login__input" placeholder="Date of Birth">
+                    </div>
+                    <div class="login__field">
+                        <label for="appointment-time">Discharge Time:</label>
+                        <i class="login__icon fas fa-clock"></i>
+                        <input type="time" class="login__input" placeholder="Preferred Appointment Time">
+                    </div>
+                    <div class="login__field">
+                        <label for="appointment-time">Medical Report:</label>
+                        <i class="login__icon fas fa-file"></i>
+                        <input type="file" class="login__input" accept=".pdf, .doc, .docx" placeholder="Upload Medical Records">
+                    </div>
+                    <button class="button login__submit" type="button" onclick="window.location.href = 'doc.html'">
+                        <span class="button__text">Add Data</span>
+                        <i class="button__icon fas fa-chevron-right"></i>
+                    </button>
+                    
+                    <button class="button login__submit" type="button" onclick="window.location.href = 'doc.html'">
+                        <span class="button__text">Cancel</span>
+                        <i class="button__icon fas fa-chevron-right"></i>
+                    </button>
+                </form>
+            </div>
+            <div class="screen__background">
+                <span class="screen__background__shape screen__background__shape4"></span>
+                <span class="screen__background__shape screen__background__shape3"></span>
+                <span class="screen__background__shape screen__background__shape2"></span>
+                <span class="screen__background__shape screen__background__shape1"></span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
