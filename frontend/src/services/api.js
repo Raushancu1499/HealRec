@@ -143,7 +143,7 @@ export const healthAPI = {
 };
 
 // Medications API functions
-export const medicationAPI = {
+export const medicationsAPI = {
   getMedications: async (page = 1, limit = 10, status = 'all', search = '') => {
     const params = new URLSearchParams({
       page,
@@ -602,7 +602,7 @@ export default {
   apiRequest,
   authAPI,
   healthAPI,
-  medicationAPI,
+  medicationsAPI,
   appointmentAPI,
   reportAPI,
   telemedicineAPI,
