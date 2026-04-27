@@ -611,3 +611,6 @@ export default {
   labAPI,
   apiUtils
 };
+
+export const reportsAPI = reportAPI;
+export const appointmentsAPI = appointmentAPI;
