@@ -330,9 +330,12 @@ const Landing = () => {
                 </div>
                 <h3 className="text-xl font-bold text-slate-900 mb-3">{feature.title}</h3>
                 <p className="text-slate-600 leading-relaxed">{feature.description}</p>
-                <div className="mt-6 flex items-center text-blue-600 font-medium">
+                <button 
+                  onClick={() => navigate('/signup')} 
+                  className="mt-6 flex items-center text-blue-600 font-medium hover:text-blue-800 transition-colors"
+                >
                   Learn more <ArrowRight size={16} className="ml-1" />
-                </div>
+                </button>
               </motion.div>
             ))}
           </div>
@@ -436,29 +439,29 @@ const Landing = () => {
             <div>
               <h3 className="font-bold text-lg mb-4">Product</h3>
               <ul className="space-y-2 text-slate-400">
-                <li><Link to="/features" className="hover:text-white transition-colors">Features</Link></li>
-                <li><Link to="/pricing" className="hover:text-white transition-colors">Pricing</Link></li>
-                <li><Link to="/security" className="hover:text-white transition-colors">Security</Link></li>
-                <li><Link to="/api" className="hover:text-white transition-colors">API</Link></li>
+                <li><button onClick={() => scrollToSection('features')} className="hover:text-white transition-colors">Features</button></li>
+                <li><Link to="/signup" className="hover:text-white transition-colors">Pricing</Link></li>
+                <li><Link to="/signup" className="hover:text-white transition-colors">Security</Link></li>
+                <li><Link to="/signup" className="hover:text-white transition-colors">API</Link></li>
               </ul>
             </div>
             
             <div>
               <h3 className="font-bold text-lg mb-4">Company</h3>
               <ul className="space-y-2 text-slate-400">
-                <li><Link to="/about" className="hover:text-white transition-colors">About Us</Link></li>
-                <li><Link to="/careers" className="hover:text-white transition-colors">Careers</Link></li>
-                <li><Link to="/blog" className="hover:text-white transition-colors">Blog</Link></li>
-                <li><Link to="/contact" className="hover:text-white transition-colors">Contact</Link></li>
+                <li><Link to="/signup" className="hover:text-white transition-colors">About Us</Link></li>
+                <li><Link to="/signup" className="hover:text-white transition-colors">Careers</Link></li>
+                <li><Link to="/signup" className="hover:text-white transition-colors">Blog</Link></li>
+                <li><Link to="/signup" className="hover:text-white transition-colors">Contact</Link></li>
               </ul>
             </div>
             
             <div>
               <h3 className="font-bold text-lg mb-4">Legal</h3>
               <ul className="space-y-2 text-slate-400">
-                <li><Link to="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link></li>
-                <li><Link to="/terms" className="hover:text-white transition-colors">Terms of Service</Link></li>
-                <li><Link to="/compliance" className="hover:text-white transition-colors">HIPAA Compliance</Link></li>
+                <li><Link to="/signup" className="hover:text-white transition-colors">Privacy Policy</Link></li>
+                <li><Link to="/signup" className="hover:text-white transition-colors">Terms of Service</Link></li>
+                <li><Link to="/signup" className="hover:text-white transition-colors">HIPAA Compliance</Link></li>
               </ul>
             </div>
           </div>

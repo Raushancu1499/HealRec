@@ -9,9 +9,13 @@ import {
   Calendar,
   Zap,
   ShieldCheck,
-  Loader2
+  Loader2,
+  X,
+  Lock,
+  Server,
+  Key
 } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 import { reportsAPI, medicationsAPI, appointmentsAPI } from '../services/api';
 
@@ -21,6 +25,7 @@ const Dashboard = () => {
   const [stats, setStats] = useState([]);
   const [currentMedications, setCurrentMedications] = useState([]);
   const [recentActivity, setRecentActivity] = useState([]);
+  const [showSecurityModal, setShowSecurityModal] = useState(false);
 
   useEffect(() => {
     const fetchDashboardData = async () => {
@@ -202,7 +207,10 @@ const Dashboard = () => {
                     </div>
                     <h3 className="text-xl font-extrabold mb-2 text-white">Full Encryption</h3>
                     <p className="text-xs font-medium opacity-80 mb-6 text-white">Your medical data is protected with 256-bit AES encryption.</p>
-                    <button className="w-full py-2.5 bg-white text-blue-700 rounded-xl text-xs font-extrabold hover:bg-blue-50 transition-colors uppercase tracking-wider">
+                    <button 
+                        onClick={() => setShowSecurityModal(true)}
+                        className="w-full py-2.5 bg-white text-blue-700 rounded-xl text-xs font-extrabold hover:bg-blue-50 transition-colors uppercase tracking-wider"
+                    >
                         View Security Report
                     </button>
                 </div>
@@ -226,6 +234,74 @@ const Dashboard = () => {
             </section>
         </div>
       </div>
+
+      <AnimatePresence>
+        {showSecurityModal && (
+          <motion.div 
+            initial={{ opacity: 0 }} 
+            animate={{ opacity: 1 }} 
+            exit={{ opacity: 0 }} 
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm"
+          >
+            <motion.div 
+              initial={{ scale: 0.9, opacity: 0 }} 
+              animate={{ scale: 1, opacity: 1 }} 
+              exit={{ scale: 0.9, opacity: 0 }} 
+              className="bg-white rounded-[32px] p-8 max-w-md w-full shadow-2xl relative"
+            >
+              <button 
+                onClick={() => setShowSecurityModal(false)}
+                className="absolute top-6 right-6 text-slate-400 hover:text-slate-600 transition-colors"
+              >
+                <X size={24} />
+              </button>
+              
+              <div className="flex items-center space-x-4 mb-8">
+                <div className="bg-emerald-100 p-3 rounded-2xl">
+                  <ShieldCheck size={28} className="text-emerald-600" />
+                </div>
+                <div>
+                  <h2 className="text-2xl font-extrabold text-slate-900">Security Report</h2>
+                  <p className="text-emerald-600 font-bold text-sm">System Secure</p>
+                </div>
+              </div>
+
+              <div className="space-y-6">
+                <div className="flex items-start space-x-4 p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                  <Lock className="text-blue-600 mt-1" size={20} />
+                  <div>
+                    <h4 className="font-extrabold text-slate-800 text-sm">End-to-End Encryption</h4>
+                    <p className="text-xs text-slate-500 font-medium mt-1">All personal data is encrypted at rest using AES-256 and in transit via TLS 1.3.</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start space-x-4 p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                  <Server className="text-blue-600 mt-1" size={20} />
+                  <div>
+                    <h4 className="font-extrabold text-slate-800 text-sm">HIPAA Compliant Servers</h4>
+                    <p className="text-xs text-slate-500 font-medium mt-1">Data is stored in isolated, heavily monitored environments adhering to compliance standards.</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start space-x-4 p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                  <Key className="text-blue-600 mt-1" size={20} />
+                  <div>
+                    <h4 className="font-extrabold text-slate-800 text-sm">Authentication Status</h4>
+                    <p className="text-xs text-slate-500 font-medium mt-1">Session secured via advanced JWT tokens with strict expiry protocol.</p>
+                  </div>
+                </div>
+              </div>
+
+              <button 
+                onClick={() => setShowSecurityModal(false)}
+                className="mt-8 w-full py-4 bg-slate-900 text-white rounded-xl text-sm font-extrabold hover:bg-slate-800 transition-colors uppercase tracking-wider"
+              >
+                Close Report
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

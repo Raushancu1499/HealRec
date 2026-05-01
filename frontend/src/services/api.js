@@ -42,7 +42,7 @@ export const apiRequest = async (endpoint, options = {}) => {
 };
 
 export const authAPI = {
-      login: (credentials) => apiRequest('/auth/login', { method: 'POST', body: credentials, requiresAuth: false }),
+      login: (email, password) => apiRequest('/auth/login', { method: 'POST', body: { email, password }, requiresAuth: false }),
       register: (userData) => apiRequest('/auth/register', { method: 'POST', body: userData, requiresAuth: false }),
       getProfile: () => apiRequest('/auth/profile'),
       updateProfile: (data) => apiRequest('/auth/profile', { method: 'PUT', body: data })
@@ -66,6 +66,7 @@ export const appointmentsAPI = {
 
 export const reportsAPI = {
       getAll: () => apiRequest('/reports'),
+      getStatistics: () => apiRequest('/reports/statistics'),
       getById: (id) => apiRequest(`/reports/${id}`),
       upload: (formData) => {
               const token = localStorage.getItem('healrec_token');
@@ -112,7 +113,16 @@ export const labAPI = {
 
 export const apiUtils = {
         formatDate: (date) => new Date(date).toLocaleDateString(),
-        formatCurrency: (amount) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount)
+        formatCurrency: (amount) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount),
+        isAuthenticated: () => !!localStorage.getItem('healrec_token'),
+        logout: () => {
+                localStorage.removeItem('healrec_token');
+                localStorage.removeItem('healrec_user');
+        },
+        handleError: (error) => {
+                if (error.message) return error.message;
+                return 'An unexpected error occurred. Please check your connection and try again.';
+        }
 };
 
 // Singular aliases for backward compatibility and to fix build errors
